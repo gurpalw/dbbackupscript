@@ -1,6 +1,7 @@
 #!/bin/bash
+######
 #Script to restore a sbx db to prod db for new SB environments.#
-#
+#######
 while getopts h:d:u: options; do
   case $options in
     h) dbhost=$OPTARG;;
@@ -17,7 +18,7 @@ set -o pipefail
 mysqldump --verbose -h $dbhost --max_allowed_packet=1G --extended-insert --single-transaction --add-drop-database --opt $dbname --user=$dbusername --password=$dbpassword | gzip -1 > $filename.sql.gz
 if [ $? -eq 0 ]; then
   echo "Successfully created dump."
-  read -p "Enter host that you wish to restore: " restoredbhost
+  read -p "Enter host that you wish to restore to: " restoredbhost
   read -p "Enter name of database you wish to restore to: " restoredbname
   echo "Enter Credentials for $restoredbhost"
   read -p "Username: " restoredbusername
@@ -27,6 +28,7 @@ if [ $? -eq 0 ]; then
       exit 0
     else
       echo "Restore failed."
+      rm $filename.sql.gz
       exit 1
     fi
 else
