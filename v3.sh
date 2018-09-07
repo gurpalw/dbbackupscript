@@ -32,7 +32,7 @@ if [ $? -eq 0 ]; then
       exit 1
     fi
 else
-  echo "Something went wrong with the mysqldump."
+  echo "Something went wrong with the mysqldump. Deleting $filename.sql.gz"
   rm $filename.sql.gz
   exit 1
 fi
