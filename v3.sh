@@ -38,6 +38,7 @@ read -p "Filename for dump: " filename
 echo "Attempting to dump $dbname from $dbhost to $filename.sql.gz"
 echo "mysqldump --verbose -h $dbhost --max_allowed_packet=1G --extended-insert --single-transaction --add-drop-database --opt $dbname --user=$dbusername --password=xxxxxx | gzip -1 > $filename.sql.gz"
 set -o pipefail
+
 mysqldump --verbose -h $dbhost --max_allowed_packet=1G --extended-insert --single-transaction --add-drop-database --opt $dbname --user=$dbusername --password=$dbpassword | gzip -1 > $filename.sql.gz
 if [ $? -eq 0 ]; then
   echo "Successfully created dump."
