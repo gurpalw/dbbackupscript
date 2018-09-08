@@ -8,8 +8,9 @@ unset dbusername
 
 usage()
 {
-  echo "Usage: backupdb -h host -d database -u user "
-  exit
+  echo "Missing or incorrect flags."
+  echo "Usage: backupdb -h host -d database -u user"
+  exit 1
 }
 
 while getopts h:d:u: options; do
@@ -20,15 +21,17 @@ while getopts h:d:u: options; do
     esac
 done
 
-if [ -z $dbhost ]; then
-  usage
-fi
+cleanup(){
+rm $filename.sql.gz
+exit 1
+}
 
-if [ -z $dbname ]; then
-  usage
-fi
+cleanexit(){
+rm $filename.sql.gz
+exit 0
+}
 
-if [ -z $dbusername ]; then
+if [ -z $dbhost ] || [ -z $dbname ] || [ -z $dbusername ]; then
   usage
 fi
 
@@ -49,14 +52,13 @@ if [ $? -eq 0 ]; then
   zcat < $filename.sql.gz | perl -pe 's/\sDEFINER=`[^`]+`@`[^`]+`//' | mysql -h $restoredbhost -u $restoredbusername -p $restoredbname
     if [ $? -eq 0 ]; then
       echo "Restore complete."
-      exit 0
+      cleanexit
     else
       echo "Restore failed."
-      rm $filename.sql.gz
-      exit 1
+      cleanup
     fi
 else
-  echo "Something went wrong with the mysqldump. Deleting $filename.sql.gz"
-  rm $filename.sql.gz
+  echo "Something went wrong with the mysqldump. Deleting failed $filename.sql.gz"
+  cleanup
   exit 1
 fi
