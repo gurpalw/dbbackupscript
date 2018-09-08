@@ -13,14 +13,6 @@ usage()
   exit 1
 }
 
-while getopts h:d:u: options; do
-  case $options in
-    h) dbhost=$OPTARG;;
-    d) dbname=$OPTARG;;
-    u) dbusername=$OPTARG;;
-    esac
-done
-
 cleanup(){
 rm $filename.sql.gz
 exit 1
@@ -30,6 +22,14 @@ cleanexit(){
 rm $filename.sql.gz
 exit 0
 }
+
+while getopts h:d:u: options; do
+  case $options in
+    h) dbhost=$OPTARG;;
+    d) dbname=$OPTARG;;
+    u) dbusername=$OPTARG;;
+    esac
+done
 
 if [ -z $dbhost ] || [ -z $dbname ] || [ -z $dbusername ]; then
   usage
@@ -60,5 +60,4 @@ if [ $? -eq 0 ]; then
 else
   echo "Something went wrong with the mysqldump. Deleting failed $filename.sql.gz"
   cleanup
-  exit 1
 fi
