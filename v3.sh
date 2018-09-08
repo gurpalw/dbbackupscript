@@ -8,8 +8,8 @@ unset dbusername
 
 usage()
 {
-  echo "Missing or incorrect flags."
-  echo "Usage: backupdb -h host -d database -u user"
+  echo "Missing or incorrect flags. All flags mandatory."
+  echo "Usage: backupdb -h host -d databasename -u username"
   exit 1
 }
 
