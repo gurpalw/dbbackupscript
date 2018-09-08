@@ -2,6 +2,16 @@
 ######
 #Script to restore a sbx db to prod db for new SB environments.#
 #######
+unset dbhost
+unset dbname
+unset dbusername
+
+usage()
+{
+  echo "Usage: backupdb -h host -d database -u user "
+  exit
+}
+
 while getopts h:d:u: options; do
   case $options in
     h) dbhost=$OPTARG;;
@@ -9,6 +19,19 @@ while getopts h:d:u: options; do
     u) dbusername=$OPTARG;;
     esac
 done
+
+if [ -z $dbhost ]; then
+  usage
+fi
+
+if [ -z $dbname ]; then
+  usage
+fi
+
+if [ -z $dbusername ]; then
+  usage
+fi
+
 read -s -p "DB Password: " dbpassword
 echo
 read -p "Filename for dump: " filename
