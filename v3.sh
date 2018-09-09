@@ -1,7 +1,8 @@
 #!/bin/bash
-######
+#################################################################
 #Script to restore a sbx db to prod db for new SB environments.#
-#######
+################################################################
+
 unset dbhost
 unset dbname
 unset dbusername
