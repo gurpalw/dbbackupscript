@@ -6,6 +6,7 @@
 unset dbhost
 unset dbname
 unset dbusername
+unset MYSQL_PWD
 
 usage()
 {
@@ -50,7 +51,9 @@ if [ $? -eq 0 ]; then
   read -p "Enter name of database you wish to restore to: " restoredbname
   echo "Enter Credentials for $restoredbhost"
   read -p "Username: " restoredbusername
-  zcat < $filename.sql.gz | perl -pe 's/\sDEFINER=`[^`]+`@`[^`]+`//' | mysql -h $restoredbhost -u $restoredbusername -p $restoredbname
+  read -s -p "Password: " restoredbpassword
+  echo
+  zcat < $filename.sql.gz | perl -pe 's/\sDEFINER=`[^`]+`@`[^`]+`//' | pv | MYSQL_PWD=$restoredbpassword mysql -h $restoredbhost -u $restoredbusername $restoredbname
     if [ $? -eq 0 ]; then
       echo "Restore complete."
       cleanexit
